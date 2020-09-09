@@ -1,7 +1,5 @@
 var http = require('http'); // Import Node.js core module
 
-const myCal = require('./gCal.js');
-const mySms = require('./sms.js');
 const { calendar } = require('googleapis/build/src/apis/calendar');
 
 var server = http.createServer(function (req, res) {   //create web server
@@ -46,10 +44,8 @@ async function doWork(res) {
     }
 }
 
-function renderEvents(res, events) {
-    //console.log("Sending SMS...");
-    //mySms.loadCred('ring-cred.json', mySms.send_sms, mySms.RECIPIENT, "testing calling from server.js");
-  
+// Take Google Calendar Events JSON object and render them as HTML Table
+// Include RC Embeddable components for future integration
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write('<html>');
     res.write('<head>');
