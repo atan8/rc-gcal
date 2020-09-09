@@ -1,2 +1,2 @@
 # rc-gcal
- RingCenter and Google Calendar Integration
+ RingCentral SMS API and Google Calendar Integration
