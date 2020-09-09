@@ -2,6 +2,7 @@ const SDK = require("@ringcentral/sdk").SDK;
 
 const fs = require("fs");
 
+// dummy recipient number
 RECIPIENT = "+14153338888";
 RINGCENTRAL_SERVER = "https://platform.devtest.ringcentral.com";
 
@@ -13,8 +14,8 @@ global.rc_ext;
 
 function loadCred(credfile, callback, to, msg) {
     console.log("reading credentials...");
-    // Load client secrets from a local file.
-    //var content = fs.readFile(ring-cred.json);
+    // Load client id/secrets and SMS user app credential from a local file.
+    // separated this from the original RC sample code in order to check this into github
     fs.readFile(credfile, (err, content) => {
         if (err) return console.log("Error loading client secret file:", err);
         // Load ring credentials
