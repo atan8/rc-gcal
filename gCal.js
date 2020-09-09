@@ -118,16 +118,7 @@ function listEvents(auth, myRes, myCallBack) {
     } else {
       console.log('No upcoming events found.');
     }
-    //console.log("events: " + JSON.stringify(events));
-    //console.log("1. events: " + JSON.stringify(myevents));
     myCallBack(myRes, events);
-    //console.log("2. events: " + JSON.stringify(myevents));
-    //console.log('gloal myevent = ' + JSON.stringify(myevents));
-
-/*    for (var i=0; i < myevents.length; i++) {
-      var sta = myevents[i].start.date || myevents[i].start.dateTime;
-      console.log(`${i} - ${sta} - ${myevents[i].summary}`);
-*/
   });
 }
 // [END calendar_quickstart]
