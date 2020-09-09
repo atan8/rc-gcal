@@ -1,6 +1,11 @@
 var http = require('http'); // Import Node.js core module
 
+const myCal = require('./gCal.js'); // Import Google Calendar module
+const mySms = require('./sms.js');  // Import RingCentral SMS module
+
 const { calendar } = require('googleapis/build/src/apis/calendar');
+
+// This is a simple NodeJS WebServer that process request and handle them
 
 var server = http.createServer(function (req, res) {   //create web server
     if (req.url == '/') { //check the URL of the current request
@@ -46,6 +51,7 @@ async function doWork(res) {
 
 // Take Google Calendar Events JSON object and render them as HTML Table
 // Include RC Embeddable components for future integration
+function renderEvents(res, events) { 
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write('<html>');
     res.write('<head>');
@@ -66,8 +72,11 @@ async function doWork(res) {
           if (!desc) {
             desc = "<no description>";
           } else {
+            // assuming description has valid phone number for now
             res.write('<br>TEL Link: <a href="tel:'+desc+'">'+desc+'</a></br/>');
             res.write('<br>SMS Link: <a href="sms:'+desc+'">'+desc+'</a></br/>');
+            // Send SMS for each valid description/phone number.  
+            // Todo: refactor/rename loadCred
             mySms.loadCred('ring-cred.json', mySms.send_sms, desc, ">>> Reminder <<< " + summary + "--- Date: [" + start + "]");
           }
           res.write(desc +'</td></tr>');
@@ -79,20 +88,8 @@ async function doWork(res) {
 
     res.write('</body></html>');
     res.end();
-
-    //res.write("<script src = \"https://ringcentral.github.io/ringcentral-embeddable-voice/adapter.js\" ></script>"); 
-
-    //res.writeHead(200, { 'Content-Type': 'application/json' });
-    //res.write(JSON.stringify({ message: "Hello World"})); 
-    //console.log("My Events: - " + events);
-    //res.write(JSON.stringify(events)); 
 }
 
 server.listen(5000); //6 - listen for any incoming requests
-
-//myCal.listEvents;
-
-//mySms.loadCred('ring-cred.json', mySms.send_sms, mySms.RECIPIENT, "testing calling from server.js");
-//mySms.send_sms(mySms.rc_user, "+14158237078", "testing remote calling");
 
 console.log('Node.js web server at port 5000 is running..')
