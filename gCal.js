@@ -90,7 +90,7 @@ function getAccessToken(oAuth2Client, myRes, myCallBack, callback) {
 
 
 /**
- * Lists the next 10 events on the user's primary calendar.
+ * Lists the next 12 events on the user's primary calendar.
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 function listEvents(auth, myRes, myCallBack) {
@@ -127,7 +127,6 @@ function listEvents(auth, myRes, myCallBack) {
 /*    for (var i=0; i < myevents.length; i++) {
       var sta = myevents[i].start.date || myevents[i].start.dateTime;
       console.log(`${i} - ${sta} - ${myevents[i].summary}`);
-    }
 */
   });
 }
