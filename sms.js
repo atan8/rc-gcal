@@ -1,27 +1,27 @@
+// prerequisite: please install the RingCentral SDK first via npm
+// $ npm install @ringcentral/sdk –save
+
 const SDK = require("@ringcentral/sdk").SDK;
 
 const fs = require("fs");
 
 // dummy recipient number
-RECIPIENT = "+14153338888";
+RECIPIENT = "+1415xxxxxxx"; // << to be updated 
 RINGCENTRAL_SERVER = "https://platform.devtest.ringcentral.com";
+RC_CREDENTIALS = 'ring-cred.json';
 
-global.rcsdk;
 global.platform;
-global.rc_user;
-global.rc_password;
-global.rc_ext;
 
-function loadCred(credfile, callback, to, msg) {
-    console.log("reading credentials...");
+function send_sms(to, msg) {
+    console.log("Reading credentials...");
     // Load client id/secrets and SMS user app credential from a local file.
     // separated this from the original RC sample code in order to check this into github
-    fs.readFile(credfile, (err, content) => {
+    fs.readFile(RC_CREDENTIALS, (err, content) => {
         if (err) return console.log("Error loading client secret file:", err);
         // Load ring credentials
         var ringCred = JSON.parse(content);
-        console.log(ringCred);
-        authorize(ringCred, callback, to, msg);
+        //console.log(ringCred);
+        authorize(ringCred, send_sms2, to, msg);
   });
 }
 
@@ -34,33 +34,27 @@ function authorize(credentials, callback, to, msg) {
     RINGCENTRAL_EXTENSION,
   } = credentials.ringcred;
 
-  console.log("1 RC User = " + global.rc_user);
-  global.rc_user = RINGCENTRAL_USERNAME;
-  global.rc_password = RINGCENTRAL_PASSWORD;
-  global.rc_ext = RINGCENTRAL_EXTENSION;
-  console.log("2 RC User = " + global.rc_user);
-
-  global.rcsdk = new SDK({
+  var rcsdk = new SDK({
     server: RINGCENTRAL_SERVER,
     clientId: RINGCENTRAL_CLIENTID,
     clientSecret: RINGCENTRAL_CLIENTSECRET,
   });
 
-  global.platform = rcsdk.platform();
+  platform = rcsdk.platform();
   platform
     .login({
-      username: rc_user,
-      password: rc_password,
-      extension: rc_ext,
+      username: RINGCENTRAL_USERNAME,
+      password: RINGCENTRAL_PASSWORD,
+      extension: RINGCENTRAL_EXTENSION,
     })
     .then(function (resp) {
       console.log("Successfully logged into Ring Central");
-      callback(rc_user, to, msg);
+      callback(RINGCENTRAL_USERNAME, to, msg);
     });
     
 }
 
-function send_sms(from, to, message) {
+function send_sms2(from, to, message) {
   console.log("from: " + from + " - to: " + to + " | msg: " + message);
 
   platform
@@ -76,13 +70,12 @@ function send_sms(from, to, message) {
 }
 
 function main() {
-  loadCred('ring-cred.json', send_sms, RECIPIENT, "Brushing Up API and coding skill.");
+  send_sms(RECIPIENT, "Testing SMS message.");
 }
 
 //main();
 
 module.exports = {
   RECIPIENT,
-  loadCred,
   send_sms,
 };

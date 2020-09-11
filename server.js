@@ -1,3 +1,5 @@
+// server.js is created from NodeJS server quick start sample
+
 var http = require('http'); // Import Node.js core module
 
 const myCal = require('./gCal.js'); // Import Google Calendar module
@@ -14,7 +16,7 @@ var server = http.createServer(function (req, res) {   //create web server
         res.writeHead(200, { 'Content-Type': 'text/html' }); 
         
         // set response content    
-        res.write('<html><body><p>This is home Page.</p></body></html>');
+        res.write('<html><body><p>This is home Page.</p><p>Use "/list" to retrieve the list of calendar events</p></body></html>');
         res.end();
     
     }
@@ -32,14 +34,14 @@ var server = http.createServer(function (req, res) {   //create web server
         res.end();
     
     } else if (req.url == '/list') { //check the URL of the current request
-        doWork(res);
+        listCalendarEvents(res);
     }
     else
         res.end('Invalid Request!');
 
 });
 
-async function doWork(res) {
+async function listCalendarEvents(res) {
     try {
         console.log("Loading events from google calendar");
         
@@ -55,12 +57,19 @@ function renderEvents(res, events) {
     res.writeHead(200, { 'Content-Type': 'text/html' });
     res.write('<html>');
     res.write('<head>');
-    res.write('<script> (function() { var rcs = document.createElement("script"); rcs.src = "https://ringcentral.github.io/ringcentral-embeddable/adapter.js"; var rcs0 = document.getElementsByTagName("script")[0]; rcs0.parentNode.insertBefore(rcs, rcs0);})();</script>');
+    // embeddeding RingCentral embeddable javascript code
+    res.write('<script src="https://ringcentral.github.io/ringcentral-embeddable/adapter.js"></script>');
+    res.write('<style>');
+    res.write('table {border-collapse: collapse; width: 100%;}  ');  
+    res.write('th, td {text-align: left;  padding: 8px;}  ');
+    res.write('tr:nth-child(even){background-color: #f2f2f2}  ');
+    res.write('th {background-color: #4CAF50;  color: white;}  ');
+    res.write('</style>');
     res.write('</head>');
 
     res.write('<body><p>This is the event listing data Page.</p>');
     if (events.length) {
-        res.write('<table border=1><tr><th>Date/Time</th><th>Summary</th><th>Description</th></tr>');
+        res.write('<table><tr><th>Date/Time</th><th>Summary</th><th>Description</th></tr>');
         console.log('Upcoming ' + events.length + ' events:');
         events.map((event, i) => {
           const start = event.start.dateTime || event.start.date;
@@ -77,7 +86,7 @@ function renderEvents(res, events) {
             res.write('<br>SMS Link: <a href="sms:'+desc+'">'+desc+'</a></br/>');
             // Send SMS for each valid description/phone number.  
             // Todo: refactor/rename loadCred
-            mySms.loadCred('ring-cred.json', mySms.send_sms, desc, ">>> Reminder <<< " + summary + "--- Date: [" + start + "]");
+            mySms.send_sms(desc, ">>> Reminder <<< " + summary + "--- Date: [" + start + "]");
           }
           res.write(desc +'</td></tr>');
         });

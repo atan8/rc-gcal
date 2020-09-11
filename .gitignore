@@ -1,2 +1,3 @@
-ring-cred.json
-credentials.json
+*.json
+node_modules/
+

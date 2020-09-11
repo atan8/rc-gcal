@@ -15,6 +15,10 @@
  * limitations under the License.
  */
 // [START calendar_quickstart]
+
+// prerequisite: please install the Google SDK first via npm
+// $ npm install googleapis@39 --save
+
 const fs = require('fs');
 const readline = require('readline');
 const {google} = require('googleapis');
@@ -26,11 +30,14 @@ const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
 // time.
 const TOKEN_PATH = 'token.json';
 
+// credentials.json is generated via https://developers.google.com/calendar/quickstart/nodejs
+const CRED_PATH = 'credentials.json';
+
 function loadEvents(myRes, myCallBack) {
 // Load client secrets from a local file.
   console.log("Loading events...");
 
-  fs.readFile('credentials.json', (err, content) => {
+  fs.readFile(CRED_PATH, (err, content) => {
     if (err) return console.log('Error loading client secret file:', err);
     // Authorize a client with credentials, then call the Google Calendar API.
     authorize(JSON.parse(content), myRes, myCallBack, listEvents);
@@ -45,7 +52,8 @@ function loadEvents(myRes, myCallBack) {
  * @param {function} callback The callback to call with the authorized client.
  */
 function authorize(credentials, myRes, myCallBack, callback) {
-  const {client_secret, client_id, redirect_uris} = credentials.web;
+  // loading credentials from the credentials.json file
+  const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
 
@@ -105,7 +113,7 @@ function listEvents(auth, myRes, myCallBack) {
     if (err) return console.log('The API returned an error: ' + err);
     const events = res.data.items;
     if (events.length) {
-      console.log('Upcoming 10 events:');
+      console.log('Upcoming 12 events:');
       events.map((event, i) => {
         const start = event.start.dateTime || event.start.date;
         // include description if not undefined
@@ -113,12 +121,15 @@ function listEvents(auth, myRes, myCallBack) {
         if (!desc) {
           desc = "<no description>";
         }
-        //console.log(`${i} - ${start} - ${event.summary} - ${desc}`);
+        console.log(`${i} - ${start} - ${event.summary} - ${desc}`);
       });
     } else {
       console.log('No upcoming events found.');
     }
-    myCallBack(myRes, events);
+    // handle processing the events after successful retrieval
+    if (myCallBack) {
+      myCallBack(myRes, events);
+    }
   });
 }
 // [END calendar_quickstart]
