@@ -30,7 +30,8 @@ npm install googleapis@39 --save
 * Sign up for [RingCental developer account](https://developers.ringcentral.com/).
 * Create [SMS QuickStart App](https://developers.ringcentral.com/guide/messaging/quick-start/node)
   * Click on the "Create SMS App" button
-  * Select "Web Server"
+  * Select "Other Non-UI" this uses **Password Grant** for Oauth.
+    * To do: work on "Web App" **Auth Code** approach later.
   * Keep everything as default on the next screen and hit "Create"
   * Setup Account Password as needed
   * Be sure to note the *Client ID*, *Client Secret*, *Username*, *Password*, *Extension* from the **Credentials** page.
