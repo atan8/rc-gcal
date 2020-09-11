@@ -1,0 +1,9 @@
+{
+    "ringcred": {
+        "RINGCENTRAL_CLIENTID": ">>>> To Be Updated <<<< ",
+        "RINGCENTRAL_CLIENTSECRET": ">>>> To Be Updated <<<< ",
+        "RINGCENTRAL_USERNAME": ">>>> To Be Updated <<<< ",
+        "RINGCENTRAL_PASSWORD": ">>>> To Be Updated <<<< ",
+        "RINGCENTRAL_EXTENSION": "101"
+    }
+}
